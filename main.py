@@ -1,5 +1,7 @@
+import os
 
-def images_index_build(main_folder_address):
+
+def build_index_images():
     """ Обходит папки и подпапки, находит файлы формата jpg, jpeg, tiff, строит индекс:
     image_id - идентификатов по порядку (int)
     image_source_address - адрес и имя изначального файла (str)
@@ -19,19 +21,17 @@ def images_index_build(main_folder_address):
     is_any_faces - есть ли на фото лица (bool) True/False, True - нашлось хотя бы одно лицо, False - нет лиц
     num_of_faces - кол-во лиц, найденных на фото (int)
     """
+
     pass
 
 
-def faces_index_build(index_file):
+def build_index_faces():
     pass
 
 
-def persons_index_build():
+def build_index_persons():
     pass
 
-
-def recognize_faces():
-    pass
 
 
 if __name__ == '__main__':
