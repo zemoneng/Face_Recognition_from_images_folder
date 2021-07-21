@@ -1,8 +1,13 @@
 import os
+import sqlite3
 
+# Константы и параметры конфигурации:
+ALLOW_FORMATS = (".tif", ".jpeg", ".jpg")  # форматы файлов, которые мы ищем
+images_folder_path = input("Введите адрес папки с изображениями:")
+images_converted_folder_path = input("Введите адрес папки для сохранения уменьшенных копий картинок:")
 
-def build_index_images():
-    """ Обходит папки и подпапки, находит файлы формата jpg, jpeg, tiff, строит индекс:
+def build_index_images(images_folder_path):
+    """ Обходит папки и подпапки, находит файлы формата jpg, jpeg, tif, строит индекс:
     image_id - идентификатов по порядку (int)
     image_source_address - адрес и имя изначального файла (str)
     source - источник данных (int)
@@ -21,6 +26,12 @@ def build_index_images():
     is_any_faces - есть ли на фото лица (bool) True/False, True - нашлось хотя бы одно лицо, False - нет лиц
     num_of_faces - кол-во лиц, найденных на фото (int)
     """
+    for dirpath, dirnames, filenames in os.walk(images_folder_path):
+        # перебрать файлы
+        for filename in filenames:  # перебирает только файлы, отбрасывая папки
+            if os.path.splitext(filename)[1] in ALLOW_FORMATS:  # есть ли файлы выбранных нами форматов
+                print(os.path.splitext(filename)) # выводит имя и формат файла в кортеж, пример: ('0-389255', '.tif')
+                print(os.path.join(dirpath, filename))  # выводит абсолютный путь к файлу
 
     pass
 
