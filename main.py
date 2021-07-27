@@ -58,11 +58,20 @@ def build_index_images(allow_formats, import_directory, output_directory):
                 image_hash = os.path.getsize(os.path.join(dirpath, filename))  # пока хэш - это размер файла
 
                 image_info = (image_id, image_name, image_format, image_path, image_source, image_status, image_hash)
+                print(image_info[3], " -> DONE")
 
                 cur.execute("""INSERT INTO images(image_id, image_name, image_format, image_path, image_source, 
                     image_status, image_hash) VALUES(?, ?, ?, ?, ?, ?, ?);""", image_info)
                 conn.commit()
                 counter += 1
+            else:
+                print(os.path.join(dirpath, filename), " -> IGNORE")
+
+    cur.execute("SELECT COUNT (*) FROM images")
+    print("Количество проиндексированных изображений: ", cur.fetchone()[0])
+
+    cur.execute("SELECT SUM(image_hash) FROM images")
+    print("Суммарный вес нужных нам файлов в каталоге: ", cur.fetchone()[0]/1024/1024/1024, " Гб")
 
 
 def build_index_faces():
