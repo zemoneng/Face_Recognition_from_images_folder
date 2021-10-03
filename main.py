@@ -10,8 +10,15 @@ output_directory = input("Введите адрес папки где будет
 def build_index_images(allow_formats, import_directory, output_directory):
     """ Находит в каталоге import_directory все файлы форматов allow_formats
     и строит индекс в папке output_directory"""
+    database_path = str(output_directory + '/index.db')
 
-    conn = sqlite3.connect(output_directory + '/index.db')
+    # если файл базы ранее уже создавался и лежит в папке, удалить его
+    if os.path.isfile(database_path):
+        os.remove(database_path)
+        print("В указанной вами папке уже есть база данных, мы ее удалили, чтобы создать новый индекс")
+
+    # Создание новой базы
+    conn = sqlite3.connect(database_path)
     cur = conn.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS images(
        image_id INT PRIMARY KEY,
@@ -71,7 +78,7 @@ def build_index_images(allow_formats, import_directory, output_directory):
     print("Количество проиндексированных изображений: ", cur.fetchone()[0])
 
     cur.execute("SELECT SUM(image_hash) FROM images")
-    print("Суммарный вес нужных нам файлов в каталоге: ", cur.fetchone()[0]/1024/1024/1024, " Гб")
+    print("Суммарный вес нужных нам файлов в каталоге: ", round(cur.fetchone()[0]/1024/1024/1024, 2), "Гб")
 
 
 def build_index_faces():
@@ -83,4 +90,6 @@ def build_index_persons():
 
 
 if __name__ == '__main__':
+    build_index_images(allow_formats, import_directory, output_directory)
+    print("Индексация изображений прошла успешно")
     pass
