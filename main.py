@@ -3,8 +3,8 @@ import sqlite3
 
 # Константы и параметры конфигурации:
 allow_formats = (".tif", ".jpeg", ".jpg")  # форматы изображений, с которыми будем работать
-import_directory = input("Введите адрес папки с изображениями:")
-output_directory = input("Введите адрес папки где будет хранится база данных и превью-картинки:")
+import_directory = input("Введите адрес папки с изображениями: ")
+output_directory = input("Введите адрес папки где будет хранится база данных и превью-картинки: ")
 
 
 def build_index_images(allow_formats, import_directory, output_directory):
@@ -14,11 +14,22 @@ def build_index_images(allow_formats, import_directory, output_directory):
 
     # если файл базы ранее уже создавался и лежит в папке, удалить его
     if os.path.isfile(database_path):
-        os.remove(database_path)
-        print("В указанной вами папке уже есть база данных, мы ее удалили, чтобы создать новый индекс")
+        reindex_ans = str(input("Индекс уже был построен ранее. Переиндексировать? Y/N: ").lower())
+        while True:
+            if reindex_ans in ("yes", "y", "да"):
+                os.remove(database_path)
+                build_new_base_images(allow_formats, import_directory, output_directory)
+                break
+            elif reindex_ans in ("no", "n", "нет"):
+                print("Предыдущий индекс оставлен без изменения.")
+                break
+            else:
+                reindex_ans = str(input('Не понял. Введите "Да", если надо переиндексировать базу или "Нет", чтобы оставить как есть: ').lower())
 
+
+def build_new_base_images(allow_formats, import_directory, output_directory):
     # Создание новой базы
-    conn = sqlite3.connect(database_path)
+    conn = sqlite3.connect(output_directory + '/index.db')
     cur = conn.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS images(
        image_id INT PRIMARY KEY,
@@ -91,5 +102,5 @@ def build_index_persons():
 
 if __name__ == '__main__':
     build_index_images(allow_formats, import_directory, output_directory)
-    print("Индексация изображений прошла успешно")
+    print("Скрипт завершен")
     pass
