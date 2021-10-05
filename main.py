@@ -1,10 +1,19 @@
 import os
 import sqlite3
+import sys
+
+def check_folder_exist(folder_path):
+    if os.path.exists(folder_path) and os.path.isdir(folder_path) == True:
+        pass
+    else:
+        sys.exit("Ошибка: папка по адресу не существует.")
 
 # Константы и параметры конфигурации:
 allow_formats = (".tif", ".jpeg", ".jpg")  # форматы изображений, с которыми будем работать
 import_directory = input("Введите адрес папки с изображениями: ")
+check_folder_exist(import_directory)
 output_directory = input("Введите адрес папки где будет хранится база данных и превью-картинки: ")
+check_folder_exist(output_directory)
 
 
 def build_index_images(allow_formats, import_directory, output_directory):
